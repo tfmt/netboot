@@ -1,0 +1,50 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}netboot.me{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/netboot.css' %}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+<div id="wrap">
+	<div id="header">
+		<h1 id="logo-text"><a href="/" title="">netboot.me</a></h1>
+		<p id="slogan">Boot anything, anywhere, anytime</p>
+		<div  id="nav">
+			<ul>
+        {% if user %}
+          <li class="right"><a href="{{auth_url}}">Log out</a></li>
+        {% else %}
+          <li class="right"><a href="{{auth_url}}">Log in</a></li>
+        {% endif %}
+				<li class="first" {% ifequal handler "IndexHandler" %}id="current"{% endifequal %}><a href="/">Home</a></li>
+        <li {% ifequal path "/gettingstarted" %}id="current"{% endifequal %}><a href="/gettingstarted">Getting Started</a></li>
+        <li {% ifequal path "/help" %}id="current"{% endifequal %}><a href="/help">Help</a></li>
+        <li {% ifequal handler "CategoryHandler" %}id="current"{% endifequal %}{% ifequal handler "BootConfigHandler" %}id="current"{% endifequal %}><a href="/browse/">Packages</a></li>
+        {% if user %}
+          <li {% ifequal handler "MyConfigsHandler" %}id="current"{% endifequal %}><a href="/my/configs">My Configs</a></li>
+        {% endif %}
+			</ul>
+		</div>
+		<div id="header-image"></div>
+	</div>
+  {% block body %}{% endblock %}
+	<div id="footer-bottom">
+		<div class="bottom-left">
+			<p>
+			&copy; 2009 <strong>Nick Johnson</strong>&nbsp; &nbsp; &nbsp;
+			Design by: <a href="http://www.styleshout.com/">styleshout</a>
+			</p>
+		</div>
+		<div class="bottom-right">
+			<p>
+        <a href="http://groups.google.com/group/netbootme-discuss">Discussion group</a> |
+        <a href="http://github.com/Arachnid/netboot.me/issues">Report a bug</a> |
+				<a href="/">Home</a>
+			</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>
