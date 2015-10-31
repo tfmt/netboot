@@ -33,7 +33,7 @@ class IndexView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         pxe_ver = self.detect_pxe()
         if pxe_ver:
-            return self.redirect('/menu.gpxe')
+            return self.redirect('menu_ipxe')
         return super(IndexView, self).dispatch(request, *args, **kwargs)
 
 
@@ -41,30 +41,19 @@ class MenuCfgView(View):
     pass
 
 
-class MenuGpxeView(View):
-    # Min version of ordinary gPXE that doesn't need upgrading
-    MIN_GPXE_VER = (999, 0, 0) # All versions currently require upgrading
-
-    # Min version of netboot.me gPXE that doesn't need upgrading
-    MIN_NETBOOTME_VER = (0, 1, None)
-
+class MenuIPXEView(View):
     def get(self, request, *args, **kwargs):
-        pxe_dist, pxe_ver, netboot_ver = self.detect_pxe()
+        pxe_ver = self.detect_pxe()
 
-        if netboot_ver[0] is not None:
-            if netboot_ver < self.MIN_NETBOOTME_VER:
-                return self.upgrade()  # PXE is too old
-            else:
-                return self.menu()
-        elif pxe_ver[0] is not None and pxe_ver < self.MIN_GPXE_VER:
-            return self.upgrade()  # regular PXE is too old
+        if pxe_ver:
+            return self.menu()
         else:
-            return self.menu()  # up-to-date version, or unrecognised UA
+            return self.upgrade()
 
     @staticmethod
     def menu():
         menu = [
-            '#!gpxe',
+            '#!ipxe',
             'chain menu.c32 premenu.cfg',
             ''
         ]
@@ -76,7 +65,7 @@ class MenuGpxeView(View):
     @staticmethod
     def upgrade():
         output = [
-            '#!gpxe',
+            '#!ipxe',
             'echo'
             'echo Your copy of the PXE software is too old. '
             'Upgrade at netboot.me to avoid seeing this every boot.',

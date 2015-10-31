@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Distributions &lsaquo; {{ block.super }}{% endblock %}
+
+{% block body_attr %} data-active-nav-id="dist"{% endblock %}
+
+{% block body %}
+    <h2>
+        Distributions
+        <span class="uk-float-right">
+            <a href="{% url 'dist:add_category' %}" class="uk-button">Add Category</a>
+        </span>
+    </h2>
+
+    {% if root_categories.count == 0 %}
+        <p>No distribution categories found.</p>
+    {% else %}
+        <table class="uk-table uk-table-striped uk-table-hover uk-table-condensed">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th width="240">Entries / Sub-categories</th>
+                    <th width="60"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in root_categories %}<tr>
+                    <td><a href="">{{ category.title }}</a></td>
+                    <td>0 / {{ category.children.count }}</td>
+                    <td class="uk-text-right">
+                        <a href="#"><i class="uk-icon uk-icon-pencil"></i></a> &nbsp;
+                        <a href="#"><i class="uk-icon uk-icon-times"></i></a>
+                    </td>
+                </tr>{% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

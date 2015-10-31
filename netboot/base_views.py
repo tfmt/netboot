@@ -15,14 +15,13 @@
 ##
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.views import generic
 
 import re
 
-# Regex pattern to match PXE version
-ua_re = re.compile(r'^([gi]PXE)/(\d+).(\d+).(\d+)(\S*)'
-                   '(?: \(netboot.me/(\d+).(\d+)(?:.(\d+))?\))?$')
+# Regex pattern to match iPXE version
+ua_re = re.compile(r'^iPXE/(\d+).(\d+).(\d+)(\S*)')
 
 
 class GenericViewMixin(object):
@@ -30,13 +29,12 @@ class GenericViewMixin(object):
     A abstract mixin that implements additional methods for Views.
     """
 
+    require_login = False
+    require_admin = False
+
     def detect_pxe(self):
         """
-        Try to find out if the request comes from a compatible PXE.
-
-        This method returns a tuple with PXE distribution, it's version
-        and optionally the netboot.me version if found.
-        If none of them can be detected, a 3-tuple of None is returned.
+        Try to find out if the request comes from an iPXE instance.
 
         :return: str or None
         """
@@ -47,12 +45,20 @@ class GenericViewMixin(object):
             match = ua_re.match(user_agent)
 
             if match:
-                groups = [int(x) if x and x.isdigit() else x for x in match.groups()[2:]]
-                return groups[1], tuple(groups[:4]), tuple(groups[4:])
+                return [int(x) if x and x.isdigit() else x for x in match.groups()]
 
-        return None, None, None
+        return None
 
-    def redirect(self, url, resolve=True, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        if (self.require_login or self.require_admin) and not request.user.is_authenticated():
+            return HttpResponseForbidden()
+        elif self.require_admin and not request.user.is_admin:
+            return HttpResponseForbidden()
+
+        return super(GenericViewMixin, self).dispatch(request, *args, **kwargs)
+
+    @staticmethod
+    def redirect(url, resolve=True, *args, **kwargs):
         """
         Returns a HTTP redirect response.
 
@@ -74,4 +80,8 @@ class View(generic.View, GenericViewMixin):
 
 
 class TemplateView(generic.TemplateView, GenericViewMixin):
+    pass
+
+
+class FormView(generic.FormView, GenericViewMixin):
     pass

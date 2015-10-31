@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Login &lsaquo; {{ block.super }}{% endblock %}
+
+{% block body_attr %} data-active-nav-id="login"{% endblock %}
+
+{% block body %}
+    <h2>Login</h2>
+    <form class="uk-form uk-form-stacked" method="post">
+        {% csrf_token %}
+        {% for field in form %}<div class="uk-form-row">
+            <label class="uk-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            <div class="uk-form-controls">
+                {% if field.errors %}<div class="uk-alert uk-alert-danger">{{ field.errors }}</div>{% endif %}
+                {{ field }}
+            </div>
+        </div>{% endfor %}
+        <div class="uk-form-row">
+            <button type="submit" class="uk-button uk-button-primary">Login</button>
+        </div>
+    </form>
+{% endblock %}

@@ -19,6 +19,8 @@ from netboot import views
 
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^menu\.cfg$', views.MenuCfgView.as_view()),
-    url(r'^menu\.gpxe$', views.MenuGpxeView.as_view()),
+    url(r'^dist/', include('dist.urls', namespace='dist')),
+    url(r'^menu\.cfg$', views.MenuCfgView.as_view(), name='menu_cfg'),
+    url(r'^menu\.ipxe$', views.MenuIPXEView.as_view(), name='menu_ipxe'),
+    url(r'^user/', include('user.urls', namespace='user')),
 ]

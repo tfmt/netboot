@@ -3,11 +3,45 @@
 <head>
     <meta charset="utf-8">
     <title>{% block title %}netboot.me{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/uikit.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/netboot.css' %}">
     {% block head %}{% endblock %}
 </head>
-<body>
-<div id="wrap">
+<body{% block body_attr %}{% endblock %}>
+    <nav class="uk-navbar">
+        <a href="#" class="uk-navbar-brand">netboot.me</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+            <li data-nav-id="index"><a href="#">Index</a></li>
+            <li data-nav-id="download"><a href="#">Download</a></li>
+            <li data-nav-id="dist"><a href="{% url 'dist:index' %}">Distributions</a></li>
+            <!--<li data-nav-id="dist" class="uk-parent" data-uk-dropdown aria-haspopup="true" aria-expanded="false">
+                <a href="#">Distributions</a>
+                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">
+                    <ul class="uk-nav uk-nav-navbar">
+                        <li><a href="#">Available OSes</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </li>-->
+        </ul>
+        <div class="uk-navbar-flip">
+            <ul class="uk-navbar-nav">
+                {% if user.is_authenticated %}
+                    <li data-nav-id="logout"><a href="{% url 'user:logout' %}">Logout</a></li>
+                {% else %}
+                    <li data-nav-id="login"><a href="{% url 'user:login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    <div class="n-container">
+        {% block body %}{% endblock %}
+    </div>
+    <footer>
+        Powered by Open Source Software<br>
+        <small>&copy; 2015 TFMT UG (haftungsbeschränkt)</small>
+    </footer>
+<!--<div id="wrap">
 	<div id="header">
 		<h1 id="logo-text"><a href="/" title="">netboot.me</a></h1>
 		<p id="slogan">Boot anything, anywhere, anytime</p>
@@ -29,7 +63,6 @@
 		</div>
 		<div id="header-image"></div>
 	</div>
-  {% block body %}{% endblock %}
 	<div id="footer-bottom">
 		<div class="bottom-left">
 			<p>
@@ -45,6 +78,10 @@
 			</p>
 		</div>
 	</div>
-</div>
+</div>-->
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/uikit.min.js' %}"></script>
+    <script src="{% static 'js/netboot.js' %}"></script>
 </body>
 </html>

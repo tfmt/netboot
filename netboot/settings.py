@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dist',
+    'user',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -104,3 +106,10 @@ STATIC_URL = '/assets/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
+
+AUTH_USER_MODEL = 'user.User'
+
+try:
+    from netboot.local_settings import *
+except ImportError:
+    pass

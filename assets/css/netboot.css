@@ -1,0 +1,35 @@
+.n-container {
+    margin: 1rem;
+}
+
+.uk-navbar {
+    background-color: #33aadd;
+}
+.uk-navbar-brand {
+    color: #fff;
+}
+.uk-navbar-nav > li.uk-active > a {
+    background-color: #2D95C2;
+    color: #f2f2f2;
+}
+.uk-navbar-nav > li.uk-open > a,
+.uk-navbar-nav > li:hover > a,
+.uk-navbar-nav > li > a:focus {
+    background-color: #2D95C2;
+    color: #fff;
+}
+.uk-navbar-nav > li > a {
+    color: #fff;
+    cursor: pointer;
+}
+.uk-dropdown-navbar {
+    background-color: #3D95C2;
+    color: #fff;
+}
+
+footer {
+    background: #222;
+    color: #ddd;
+    padding: 4rem 1rem;
+    text-align: center;
+}
