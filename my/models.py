@@ -22,7 +22,7 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    type = models.CharField(max_length=16, default='native')
+    google_id = models.CharField(max_length=30)
 
     objects = UserManager()
 

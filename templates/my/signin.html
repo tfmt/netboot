@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sign in &lsaquo; {{ block.super }}{% endblock %}
+
+{% block body_attr %} data-active-nav-id="signin"{% endblock %}
+
+{% block body %}
+    <div class="uk-grid">
+        <div class="uk-width-1-3 uk-container-center">
+            <div class="uk-panel uk-panel-box">
+                <h3 class="uk-panel-title">Sign in</h3>
+                <p>In order to sign in, you'll need an Google Account. If you do not have an Google Account yet, you can create one <a href="https://accounts.google.com/signup" target="_blank">here</a>.</p>
+                <form class="uk-form" method="post" action="{% url 'my:auth' %}">
+                    {% csrf_token %}
+                    <input type="image" src="{% static 'img/gplus-signin-1x.png' %}">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

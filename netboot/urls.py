@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^dist/', include('dist.urls', namespace='dist')),
     url(r'^menu\.cfg$', views.MenuCfgView.as_view(), name='menu_cfg'),
     url(r'^menu\.ipxe$', views.MenuIPXEView.as_view(), name='menu_ipxe'),
-    url(r'^user/', include('user.urls', namespace='user')),
+    url(r'^my/', include('my.urls', namespace='my')),
 ]

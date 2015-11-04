@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.title }} &lsaquo; Distributions &lsaquo; {{ block.super }}{% endblock %}
+
+{% block body_attr %} data-active-nav-id="dist"{% endblock %}
+
+{% block body %}
+    <h2>
+        {{ category.title }}
+        <span class="uk-float-right">
+            {% if user.is_admin %}
+                <a href="{% url 'dist:add_category' %}?parent={{ category.id }}" class="uk-button">Add Category</a>
+                <a href="{% url 'dist:add_category' %}" class="uk-button">Add Entry</a>
+            {% endif %}
+        </span>
+    </h2>
+
+    <h3>Sub-categories ({{ category.children.count }})</h3>
+    {% if category.children %}
+        <table class="uk-table uk-table-striped uk-table-bordered uk-condensed">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Entries</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for child in category.children.all %}<tr>
+                    <td><a href="{% url 'dist:category' child.id %}">{{ child.title }}</a></td>
+                    <td>{{ child.entries.count|default:'n/a' }}</td>
+                </tr>{% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No sub-categories.</p>
+    {% endif %}
+{% endblock %}

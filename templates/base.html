@@ -9,32 +9,24 @@
 </head>
 <body{% block body_attr %}{% endblock %}>
     <nav class="uk-navbar">
-        <a href="#" class="uk-navbar-brand">netboot.me</a>
+        <a href="{% url 'index' %}" class="uk-navbar-brand">netboot.me</a>
         <ul class="uk-navbar-nav uk-hidden-small">
-            <li data-nav-id="index"><a href="#">Index</a></li>
+            <li data-nav-id="index"><a href="{% url 'index' %}">Index</a></li>
             <li data-nav-id="download"><a href="#">Download</a></li>
-            <li data-nav-id="dist"><a href="{% url 'dist:index' %}">Distributions</a></li>
-            <!--<li data-nav-id="dist" class="uk-parent" data-uk-dropdown aria-haspopup="true" aria-expanded="false">
-                <a href="#">Distributions</a>
-                <div class="uk-dropdown uk-dropdown-navbar uk-dropdown-bottom">
-                    <ul class="uk-nav uk-nav-navbar">
-                        <li><a href="#">Available OSes</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-            </li>-->
+            {% if user.is_admin %}<li data-nav-id="dist"><a href="{% url 'dist:index' %}">Distributions</a></li>{% endif %}
         </ul>
         <div class="uk-navbar-flip">
             <ul class="uk-navbar-nav">
                 {% if user.is_authenticated %}
-                    <li data-nav-id="logout"><a href="{% url 'user:logout' %}">Logout</a></li>
+                    <li data-nav-id="signout"><a href="{% url 'my:signout' %}">Sign out</a></li>
                 {% else %}
-                    <li data-nav-id="login"><a href="{% url 'user:login' %}">Login</a></li>
+                    <li data-nav-id="signin"><a href="{% url 'my:signin' %}">Sign in</a></li>
                 {% endif %}
             </ul>
         </div>
     </nav>
     <div class="n-container">
+        {% include "alerts.html" %}
         {% block body %}{% endblock %}
     </div>
     <footer>

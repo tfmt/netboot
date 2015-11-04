@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from netboot.base_views import FormView, TemplateView
 
 from dist import forms
@@ -44,6 +46,10 @@ class AddCategoryView(FormView):
         initial = super(AddCategoryView, self).get_initial()
         initial['is_active'] = 'yes'
         initial['is_public'] = 'no'
+
+        if self.request.GET.get('parent'):
+            initial['parent'] = self.request.GET['parent']
+
         return initial
 
     @staticmethod
@@ -62,14 +68,49 @@ class AddCategoryView(FormView):
         return choices
 
 
+class CategoryBaseView(TemplateView):
+    require_admin = True
+    require_login = True
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryBaseView, self).get_context_data(**kwargs)
+        context['category'] = self.get_category()
+        return context
+
+    def get_category(self):
+        if not hasattr(self, 'category'):
+            setattr(self, 'category', get_object_or_404(Category, id=int(self.kwargs['cat_id'])))
+        return getattr(self, 'category')
+
+
+class CategoryView(CategoryBaseView):
+    template_name = 'dist/detail.html'
+
+
 class IndexView(TemplateView):
+    require_admin = True
+    require_login = True
     template_name = 'dist/index.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['root_categories'] = self.get_root_categories()
+        parent = None
+
+        if self.request.GET.get('parent'):
+            try:
+                parent_id = int(self.request.GET['parent'])
+            except ValueError:
+                pass
+            else:
+                try:
+                    parent = Category.objects.get(id=parent_id)
+                except Category.DoesNotExist:
+                    parent = None
+
+        context['categories'] = self.get_categories(parent)
+
         return context
 
     @staticmethod
-    def get_root_categories():
-        return Category.objects.filter(parent=None)
+    def get_categories(parent):
+        return Category.objects.filter(parent=parent)

@@ -4,6 +4,7 @@
 
 .uk-navbar {
     background-color: #33aadd;
+    border-radius: 0;
 }
 .uk-navbar-brand {
     color: #fff;
@@ -21,6 +22,10 @@
 .uk-navbar-nav > li > a {
     color: #fff;
     cursor: pointer;
+    text-shadow: none;
+}
+.uk-navbar-brand {
+    text-shadow: none;
 }
 .uk-dropdown-navbar {
     background-color: #3D95C2;

@@ -8,31 +8,42 @@
     <h2>
         Distributions
         <span class="uk-float-right">
-            <a href="{% url 'dist:add_category' %}" class="uk-button">Add Category</a>
+            {% if user.is_admin %}<a href="{% url 'dist:add_category' %}" class="uk-button">Add Category</a>{% endif %}
         </span>
     </h2>
 
-    {% if root_categories.count == 0 %}
-        <p>No distribution categories found.</p>
-    {% else %}
-        <table class="uk-table uk-table-striped uk-table-hover uk-table-condensed">
+    {% if categories %}
+        <table class="uk-table uk-table-striped uk-table-bordered uk-condensed">
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th width="240">Entries / Sub-categories</th>
-                    <th width="60"></th>
+                    <th>Entries</th>
+                    <th>Visibility</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                {% for category in root_categories %}<tr>
-                    <td><a href="">{{ category.title }}</a></td>
-                    <td>0 / {{ category.children.count }}</td>
-                    <td class="uk-text-right">
-                        <a href="#"><i class="uk-icon uk-icon-pencil"></i></a> &nbsp;
-                        <a href="#"><i class="uk-icon uk-icon-times"></i></a>
+                {% for category in categories %}<tr>
+                    <td><a href="{% url 'dist:category' category.id %}">{{ category.title }}</a></td>
+                    <td>{{ category.entries.count|default:'n/a' }}</td>
+                    <td>
+                        {% if category.is_public %}
+                            <span class="uk-text-success">Public</span>
+                        {% else %}
+                            <span class="uk-text-primary">Private</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if category.is_active %}
+                            <span class="uk-badge uk-badge-success">Active</span>
+                        {% else %}
+                            <span class="uk-badge uk-badge-danger">Inactive</span>
+                        {% endif %}
                     </td>
                 </tr>{% endfor %}
             </tbody>
         </table>
+    {% else %}
+        <p>No distribution categories found.</p>
     {% endif %}
 {% endblock %}

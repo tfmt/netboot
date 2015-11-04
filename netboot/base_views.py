@@ -26,7 +26,7 @@ ua_re = re.compile(r'^iPXE/(\d+).(\d+).(\d+)(\S*)')
 
 class GenericViewMixin(object):
     """
-    A abstract mixin that implements additional methods for Views.
+    An abstract mixin that implements additional methods for views.
     """
 
     require_login = False
@@ -58,6 +58,26 @@ class GenericViewMixin(object):
         return super(GenericViewMixin, self).dispatch(request, *args, **kwargs)
 
     @staticmethod
+    def get_absolute_url(request, path, resolve=True, *args, **kwargs):
+        """
+        Build absolute URL by taking current HTTP host and path together.
+
+        :param request: HttpRequest
+        :param path: Path to append
+        :param resolve: Whether to resolve path to URL
+        :param args: Arguments
+        :param kwargs: Keyword arguments
+        :return: str
+        """
+        scheme = 'https' if request.is_secure() else 'http'
+        host = request.get_host()
+
+        if resolve:
+            path = reverse(path, *args, **kwargs)
+
+        return '{scheme}://{host}{path}'.format(scheme=scheme, host=host, path=path)
+
+    @staticmethod
     def redirect(url, resolve=True, *args, **kwargs):
         """
         Returns a HTTP redirect response.
@@ -75,13 +95,13 @@ class GenericViewMixin(object):
         return HttpResponseRedirect(url)
 
 
-class View(generic.View, GenericViewMixin):
+class View(GenericViewMixin, generic.View):
     pass
 
 
-class TemplateView(generic.TemplateView, GenericViewMixin):
+class TemplateView(GenericViewMixin, generic.TemplateView):
     pass
 
 
-class FormView(generic.FormView, GenericViewMixin):
+class FormView(GenericViewMixin, generic.FormView):
     pass
